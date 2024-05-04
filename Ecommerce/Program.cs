@@ -5,9 +5,11 @@ using Ecommerce.APIs.MiddleWares;
 using Ecommerce.Core.Entities;
 using Ecommerce.Core.Entities.Identity;
 using Ecommerce.Core.Repositories.Interfaces;
+using Ecommerce.Core.Services.Interfaces;
 using Ecommerce.Repository.Data;
 using Ecommerce.Repository.Identity;
 using Ecommerce.Repository.Repositories;
+using Ecommerce.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -50,6 +52,8 @@ namespace Ecommerce.APIs
 			{
 
 			}).AddEntityFrameworkStores<AppIdentityDbContext>();
+
+			builder.Services.AddScoped(typeof(ITokenService), typeof(TokenService));
 			#endregion
 
 
@@ -88,7 +92,9 @@ namespace Ecommerce.APIs
 			app.UseStatusCodePagesWithReExecute("/error/{0}");
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
+			app.UseAuthentication();
 			app.UseAuthorization();
+
 
 
 			app.MapControllers();
