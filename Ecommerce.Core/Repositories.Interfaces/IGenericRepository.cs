@@ -10,6 +10,10 @@ namespace Ecommerce.Core.Repositories.Interfaces
 {
 	public interface IGenericRepository<T> where T : BaseEntity
 	{
+		Task AddAsync(T item);
+		void Delete(T item);
+		void Update(T item);
+
 		// GetAll
 		Task<IReadOnlyList<T>> GetAllAsync();
 		// GEtById

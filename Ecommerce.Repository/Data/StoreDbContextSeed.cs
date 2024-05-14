@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Core.Entities;
+using Ecommerce.Core.Entities.Order;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace Ecommerce.Repository.Data
 			var productsData = File.ReadAllText("../Ecommerce.Repository/Data/DataSeeding/products.json");
 			var BrandssData = File.ReadAllText("../Ecommerce.Repository/Data/DataSeeding/brands.json");
 			var CategoriesData = File.ReadAllText("../Ecommerce.Repository/Data/DataSeeding/categories.json");
+			var DeliveryMethodsData = File.ReadAllText("../Ecommerce.Repository/Data/DataSeeding/delivery.json");
 
             Console.WriteLine(productsData);
 
@@ -58,6 +60,18 @@ namespace Ecommerce.Repository.Data
 					foreach (var p in products)
 					{
 						_context.Set<Product>().Add(p);
+					}
+					await _context.SaveChangesAsync();
+				}
+			}
+			if (_context.DeliveryMethods.Count() == 0)
+			{
+				var DeliveryMethods = JsonSerializer.Deserialize<List<DeliveryMethod>>(DeliveryMethodsData);
+				if (DeliveryMethods?.Count() > 0)
+				{
+					foreach (var p in DeliveryMethods)
+					{
+						_context.Set<DeliveryMethod>().Add(p);
 					}
 					await _context.SaveChangesAsync();
 				}

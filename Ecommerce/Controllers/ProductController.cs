@@ -6,6 +6,7 @@ using Ecommerce.Core.Entities;
 using Ecommerce.Core.Repositories.Interfaces;
 using Ecommerce.Core.Specifications;
 using Ecommerce.Core.Specifications.ProductSpecs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,6 +31,7 @@ namespace Ecommerce.APIs.Controllers
 			_mapper = mapper;
 		}
 		//GetAll
+		//[Authorize(AuthenticationSchemes = "Bearer")]
 		[HttpGet]
 		public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProducts([FromQuery] ProductSpecParams productSpec )
 		{
@@ -41,7 +43,13 @@ namespace Ecommerce.APIs.Controllers
 			//result.StatusCode = 200;
 			//var spec =new  BaseSpecifications<Product>(); 
 			#endregion
+			if (!Request.Headers.ContainsKey("ApiToken"))
+			{
+				return Unauthorized(new ApiResponse(401, "ApiToken header is missing"));
+			}
 
+			// Get the token from the Authorization header
+			
 
 			var spec =new ProductWithBrandsAndCategorySpecs(productSpec);
 
@@ -127,6 +135,7 @@ namespace Ecommerce.APIs.Controllers
 			}
 
 		}
+
 
 	}
 }

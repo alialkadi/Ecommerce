@@ -21,8 +21,12 @@ namespace Ecommerce.Repository.Repositories
 			_context = context;
 		}
 
+		public async Task AddAsync(T item) => await _context.Set<T>().AddAsync(item);
 
-        public async Task<IReadOnlyList<T>> GetAllAsync()
+		public async void Delete(T item) => _context.Set<T>().Remove(item);
+		public void Update(T item) => _context.Set<T>().Update(item);
+
+		public async Task<IReadOnlyList<T>> GetAllAsync()
 		{
 			if(typeof(T)== typeof(Product))
 			{
@@ -55,6 +59,8 @@ namespace Ecommerce.Repository.Repositories
 		{
 			return await SpecificationEvaluator<T>.GetQuery(_context.Set<T>(), spec).FirstOrDefaultAsync();
 		}
+
+
 		private IQueryable<T?> ApplySpecs(ISpecifications<T> spec)
 		{
 			return  SpecificationEvaluator<T>.GetQuery(_context.Set<T>(), spec);

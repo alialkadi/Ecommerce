@@ -2,6 +2,10 @@
 {
 	public class ResponseAuth
 	{
+        public ResponseAuth()
+        {
+            
+        }
         public ResponseAuth(string? UserName = null, string? Email = null, string? role = null)
         {
 			UserData = new UserDto

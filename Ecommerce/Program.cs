@@ -10,10 +10,13 @@ using Ecommerce.Repository.Data;
 using Ecommerce.Repository.Identity;
 using Ecommerce.Repository.Repositories;
 using Ecommerce.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
+using System.Text;
 
 namespace Ecommerce.APIs
 {
@@ -51,9 +54,28 @@ namespace Ecommerce.APIs
 			builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 			{
 
-			}).AddEntityFrameworkStores<AppIdentityDbContext>();
+			}).AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders(); ;
 
 			builder.Services.AddScoped(typeof(ITokenService), typeof(TokenService));
+			builder.Services.AddAuthentication(options =>
+			{
+				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+				
+			})
+							.AddJwtBearer(options =>
+							{
+								options.TokenValidationParameters = new TokenValidationParameters()
+								{
+									ValidateIssuer = true,
+									ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+									ValidateAudience = true,
+									ValidAudience = builder.Configuration["JWT:ValidAudience"],
+									ValidateLifetime = true,
+									ValidateIssuerSigningKey = true,
+									IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]))
+							};
+							});
 			#endregion
 
 
