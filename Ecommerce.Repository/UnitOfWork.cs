@@ -26,7 +26,7 @@ namespace Ecommerce.Repository
 			return await _context.SaveChangesAsync();
 		}
 
-		public async ValueTask DisposeAsync() =>await _context.DisposeAsync();
+		//public async ValueTask DisposeAsync() =>await _context.DisposeAsync();
 
 		public IGenericRepository<TEntity> Repository<TEntity>() where TEntity : BaseEntity
 		{

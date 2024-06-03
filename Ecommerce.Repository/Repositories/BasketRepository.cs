@@ -25,11 +25,25 @@ namespace Ecommerce.Repository.Repositories
 
 		public async Task<CustomerBasket?> GetCustomerBasketAsync(string basketId)
 		{
-			var basket = await _database.StringGetAsync(basketId);
+			try
+			{
+				var basketData = await _database.StringGetAsync(basketId);
 
+				if (basketData.IsNullOrEmpty)
+				{
+					return null; // Basket not found
+				}
 
+				var basket = JsonSerializer.Deserialize<CustomerBasket>(basketData);
 
-			return basket.IsNullOrEmpty ? null : JsonSerializer.Deserialize<CustomerBasket>(basket!);
+				return basket;
+			}
+			catch (Exception ex)
+			{
+				// Handle any exceptions, log them, and optionally return a default value or rethrow the exception
+				Console.WriteLine($"Error retrieving basket with ID '{basketId}': {ex.Message}");
+				throw; // Rethrow the exception or return a default value as needed
+			}
 		}
 
 		public async Task<CustomerBasket?> UpdateBasketAsync(CustomerBasket basket)

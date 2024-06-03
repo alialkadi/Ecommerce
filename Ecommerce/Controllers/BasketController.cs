@@ -20,7 +20,9 @@ namespace Ecommerce.APIs.Controllers
 		{
 			var basket = await _basketRepository.GetCustomerBasketAsync(id);
 
-			return Ok( basket?? new CustomerBasket(id) );
+			if ( basket == null ) { return  NotFound(new ApiResponse(404,"Basket not found ")); }
+
+			return Ok( basket );
 		}
 		[HttpPost]
 		public async Task<ActionResult<CustomerBasket>> UpdateBasket( CustomerBasket basket)

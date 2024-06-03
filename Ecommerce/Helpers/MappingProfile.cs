@@ -27,6 +27,8 @@ namespace Ecommerce.APIs.Helpers
 				.ForMember(D => D.ProductId, O => O.MapFrom(S => S.Product.ProductId))
 				.ForMember(D => D.ProductName, O => O.MapFrom(S => S.Product.ProductName))
 				.ForMember(D => D.PictureUrl, O => O.MapFrom<OrderItemPictureREsolver>());
+
+            CreateMap<CustomerBasket,CustomerBasketDTO>().ReverseMap();
 		}
     }
 }

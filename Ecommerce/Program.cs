@@ -29,33 +29,43 @@ namespace Ecommerce.APIs
 			#region Configure Services
 			// Add services to the container.
 
+			builder.Services.AddApplicationService();
 			builder.Services.AddControllers();
-			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-			builder.Services.AddEndpointsApiExplorer();
-			builder.Services.AddSwaggerGen();
-
-			builder.Services.AddDbContext<StoreDbContext>(option =>
-			{
-				option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-			}
-			);
-			builder.Services.AddDbContext<AppIdentityDbContext>(option =>
-			{
-				option.UseSqlServer(builder.Configuration.GetConnectionString("Identity"));
-			}
-			);
 			builder.Services.AddSingleton<IConnectionMultiplexer>((serviceProvider) =>
 			{
 				var connection = builder.Configuration.GetConnectionString("Redis");
 				return ConnectionMultiplexer.Connect(connection);
 			});
-			builder.Services.AddScoped<IBasketRepository, BasketRepository>();
-			builder.Services.AddApplicationService();
+			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+			builder.Services.AddEndpointsApiExplorer();
+			builder.Services.AddSwaggerGen();
+			builder.Services.AddScoped<IPaymentService, PaymentService>();
+			builder.Services.AddDbContext<StoreDbContext>(options =>
+            {
+                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+                 sqlServerOptionsAction: sqlOptions =>
+                 {
+                     sqlOptions.EnableRetryOnFailure();
+					
+                 });
+				
+            });
+			builder.Services.AddDbContext<AppIdentityDbContext>(option =>
+			{
+				option.UseSqlServer(builder.Configuration.GetConnectionString("Identity"));
+			}
+			);
+			
+			
 			builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 			{
+				options.Password.RequireDigit = true;
+				options.Password.RequireLowercase = true;
+				options.Password.RequireUppercase = true;
+				options.Password.RequiredLength = 8;
+			}).AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders(); 
 
-			}).AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders(); ;
-
+			builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 			builder.Services.AddScoped(typeof(ITokenService), typeof(TokenService));
 			builder.Services.AddAuthentication(options =>
 			{

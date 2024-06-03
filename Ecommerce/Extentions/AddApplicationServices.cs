@@ -1,6 +1,7 @@
 ﻿using Ecommerce.APIs.Errors;
 using Ecommerce.APIs.Helpers;
 using Ecommerce.Core.Repositories.Interfaces;
+using Ecommerce.Core.Services.Interfaces;
 using Ecommerce.Repository;
 using Ecommerce.Repository.Data;
 using Ecommerce.Repository.Repositories;
@@ -23,6 +24,7 @@ namespace Ecommerce.APIs.Extentions
 			services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositories<>));
 			services.AddScoped<IUnitOfWork,UnitOfWork> ();
 			services.AddScoped<IOrderService,OrderService> ();
+			
 
 			//Services.AddAutoMapper(m => m.AddProfile(new MappingProfile()));
 			services.AddAutoMapper(typeof(MappingProfile));

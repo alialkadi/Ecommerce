@@ -8,14 +8,13 @@ namespace Ecommerce.Core.Entities
 {
 	public class CustomerBasket
 	{
-		public CustomerBasket(string id)
-		{
-			this.id = id;
-			Items =new List<BasketItem>();
-		}
+		
 
 		public string id { get; set; }
         public List<BasketItem>  Items { get; set; }
+		public int? DeliveryMethodId { get; set; }
+		public string? PaymentIntentId { get; set; }
+		public string? clientSecret { get; set; }
 
     }
 }

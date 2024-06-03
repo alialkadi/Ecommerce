@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Ecommerce.Core.Repositories.Interfaces
 {
-	public interface IUnitOfWork  : IAsyncDisposable
+	public interface IUnitOfWork  
 	{
 		IGenericRepository<TEntity> Repository<TEntity>() where TEntity : BaseEntity ;
 
