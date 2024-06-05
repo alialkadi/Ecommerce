@@ -1,8 +1,12 @@
+using AdminDashboard.Helpers;
 using Ecommerce.Core.Entities.Identity;
+using Ecommerce.Core.Repositories.Interfaces;
+using Ecommerce.Repository;
 using Ecommerce.Repository.Data;
 using Ecommerce.Repository.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 
 namespace AdminDashboard
 {
@@ -38,6 +42,11 @@ namespace AdminDashboard
                 options.Password.RequireUppercase = true;
                 options.Password.RequiredLength = 8;
             }).AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
+
+            builder.Services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
+
+            builder.Services.AddAutoMapper(typeof(MapsProfile));
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -57,7 +66,7 @@ namespace AdminDashboard
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Admin}/{action=Login}/{id?}");
 
             app.Run();
         }

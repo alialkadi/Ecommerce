@@ -54,12 +54,12 @@ namespace Ecommerce.Repository.Data.Migrations
                         name: "FK_Products_ProductBrands_BrandId",
                         column: x => x.BrandId,
                         principalTable: "ProductBrands",
-                        principalColumn: "Id");
+                        principalColumn: "Id", onDelete : ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Products_ProductCategories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "ProductCategories",
-                        principalColumn: "Id");
+                        principalColumn: "Id", onDelete : ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

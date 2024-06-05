@@ -19,7 +19,6 @@ namespace Ecommerce.Services
 	{
 		private readonly IBasketRepository _basketRepository;
 		private readonly IUnitOfWork _unitOfWork;
-		private readonly StoreDbContext _context;
 		private readonly IConfiguration _configuration;
 		private readonly Core.Repositories.Interfaces.IGenericRepository<Product> _genericRepository;
 
@@ -34,7 +33,6 @@ namespace Ecommerce.Services
         {
 			this._basketRepository = basketRepository;
 			this._unitOfWork = unitOfWork;
-			this._context = context;
 			this._configuration = configuration;
 			this._genericRepository = genericRepository;
 		}
@@ -53,10 +51,10 @@ namespace Ecommerce.Services
 						// Log the item ID
 						Console.WriteLine($"Processing item with ID: {item.Id}");
 
-						var product = await _context.Products.Where(p => p.Id == item.Id).Include(p => p.Brand).Include(p=>p.Category).FirstOrDefaultAsync();
+                        var product = await _unitOfWork.Repository<Product>().GetAsync(item.Id);
 
-						// Log the retrieved product
-						Console.WriteLine($"Retrieved product: {product.Name}, Price: {product.Price}");
+                        // Log the retrieved product
+                        Console.WriteLine($"Retrieved product: {product.Name}, Price: {product.Price}");
 
 						if (item.Price != product.Price)
 						{
